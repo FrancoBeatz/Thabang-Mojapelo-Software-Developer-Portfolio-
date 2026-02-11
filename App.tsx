@@ -1,248 +1,307 @@
-import React from 'react';
-import { Github, Linkedin, Mail, Phone, Code2, Cpu, Brain, Sparkles, Terminal } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Github, Linkedin, Mail, Phone, Code2, Cpu, Brain, Sparkles, Terminal, ChevronRight, Binary, Globe, Database, Monitor, MapPin, ExternalLink, Award } from 'lucide-react';
 import { USER_INFO, PROJECTS, SKILLS, SOCIALS } from './constants';
 import ProjectCard from './components/ProjectCard';
 import GeminiChat from './components/GeminiChat';
 import BotAnimation from './components/BotAnimation';
 
 const App: React.FC = () => {
-  return (
-    <div className="min-h-screen bg-gemini-dark text-gray-200 selection:bg-gemini-blue selection:text-white pb-20 relative overflow-x-hidden font-sans">
-      
-      {/* Background Grid & Effects */}
-      <div className="fixed inset-0 bg-grid z-0 pointer-events-none opacity-30"></div>
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-          <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-gemini-blue/20 blur-[130px] rounded-full animate-pulse-slow"></div>
-          <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-gemini-purple/15 blur-[130px] rounded-full animate-pulse-slow" style={{animationDelay: '2s'}}></div>
-          <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] bg-blue-500/5 blur-[100px] rounded-full animate-float"></div>
-      </div>
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [scrolled, setScrolled] = useState(false);
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-40 bg-gemini-dark/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3 group cursor-pointer">
-            <div className="relative">
-                <span className="absolute inset-0 bg-gemini-blue blur-md opacity-50 group-hover:opacity-100 transition-opacity rounded-full animate-pulse"></span>
-                <Terminal className="w-6 h-6 text-white relative z-10" />
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleMouseMove = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
+    
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gemini-dark selection:bg-gemini-blue selection:text-white">
+      
+      {/* Interactive Background Glow */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-0 transition-opacity duration-1000"
+        style={{
+          background: `radial-gradient(circle 800px at ${mousePos.x}px ${mousePos.y}px, rgba(76, 139, 255, 0.08), transparent 80%)`
+        }}
+      />
+      <div className="fixed inset-0 bg-grid opacity-[0.15] z-0 pointer-events-none" />
+
+      {/* Header / Nav */}
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-gemini-dark/80 backdrop-blur-md py-4 border-b border-white/5' : 'bg-transparent py-8'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-tr from-gemini-blue to-gemini-purple rounded-xl flex items-center justify-center shadow-lg shadow-gemini-blue/20">
+              <Terminal className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl tracking-tight text-white group-hover:text-gemini-blue transition-colors">Thabang<span className="text-gemini-purple">.dev</span></span>
+            <span className="text-xl font-bold tracking-tighter text-white">THABANG<span className="text-gemini-blue">.ARCH</span></span>
           </div>
-          <div className="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-            {['About', 'Projects', 'Skills', 'Contact'].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} className="relative py-1 hover:text-white transition-colors group">
-                    {item}
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gemini-blue to-gemini-purple group-hover:w-full transition-all duration-300 ease-spring"></span>
-                </a>
+          
+          <div className="hidden md:flex gap-10">
+            {['Projects', 'Arsenal', 'Profile', 'Connect'].map((item) => (
+              <a 
+                key={item} 
+                href={`#${item.toLowerCase()}`} 
+                className="text-sm font-medium text-gray-400 hover:text-white transition-colors relative group"
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-gemini-blue transition-all duration-300 group-hover:w-full"></span>
+              </a>
             ))}
           </div>
+
+          <a href="#connect" className="px-5 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-semibold hover:bg-white/10 transition-all border-gemini-blue/20">
+            Secure a Meeting
+          </a>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <header className="relative pt-40 pb-20 px-6 max-w-7xl mx-auto min-h-screen flex flex-col md:flex-row items-center gap-12 z-10">
-        <div className="flex-1 space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gemini-blue/10 border border-gemini-blue/20 text-xs font-mono text-gemini-blue tracking-wide shadow-[0_0_15px_rgba(76,139,255,0.2)]">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                </span>
-                SYSTEM ONLINE: READY TO DEPLOY
-            </div>
-            
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tight drop-shadow-2xl">
-                <span className="block text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500">The Innovative</span>
-                <span className="block gradient-text">Software Developer.</span>
-            </h1>
-            
-            <p className="text-lg md:text-xl text-gray-400 max-w-xl leading-relaxed border-l-2 border-gemini-blue/30 pl-6">
-                {USER_INFO.tagline}
-            </p>
+      <section className="relative min-h-screen flex flex-col justify-center items-center text-center px-6 pt-20 z-10">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gemini-blue/20 blur-[120px] rounded-full animate-pulse-slow pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gemini-purple/20 blur-[120px] rounded-full animate-pulse-slow delay-1000 pointer-events-none" />
 
-            <div className="flex flex-wrap gap-5 pt-4">
-                <a href="#projects" className="group relative px-8 py-4 bg-white text-black font-bold rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                    <div className="absolute inset-0 bg-gradient-to-r from-gemini-blue to-gemini-purple opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <span className="relative z-10 group-hover:text-white flex items-center gap-2">
-                        View Projects <Code2 className="w-4 h-4" />
-                    </span>
+        <div className="max-w-5xl space-y-10 relative">
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono tracking-[0.2em] text-gray-400 uppercase">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            Architecting Digital Solutions v3.0
+          </div>
+
+          <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] gradient-heading">
+            CRAFTING <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gemini-blue via-gemini-purple to-gemini-blue bg-[length:200%_auto] animate-[gradient_8s_linear_infinite]">FUTURE SYSTEMS.</span>
+          </h1>
+
+          <p className="max-w-2xl mx-auto text-lg md:text-2xl text-gray-400 font-medium leading-relaxed">
+            {USER_INFO.tagline}
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-6 pt-4">
+            <a href="#projects" className="px-10 py-5 bg-white text-black font-black rounded-full hover:scale-105 transition-transform flex items-center gap-2 group shadow-2xl shadow-white/10">
+              Launch Portfolio <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
+            <div className="flex gap-4">
+              {SOCIALS.map(s => (
+                <a key={s.platform} href={s.url} target="_blank" className="w-16 h-16 glass-card rounded-full flex items-center justify-center hover:bg-white/10 transition-all hover:-translate-y-1 border-white/10">
+                  {s.icon === 'github' ? <Github className="w-6 h-6" /> : <Linkedin className="w-6 h-6" />}
                 </a>
-                <a href="#contact" className="px-8 py-4 glass-panel text-white font-semibold rounded-lg hover:bg-white/5 transition-all flex items-center gap-2 hover:border-gemini-blue/50 hover:text-gemini-blue">
-                    Get in Touch <Mail className="w-4 h-4" />
-                </a>
+              ))}
             </div>
-
-            <div className="pt-8 flex gap-6 items-center">
-                <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Connect:</span>
-                {SOCIALS.map((social) => (
-                    <a 
-                        key={social.platform} 
-                        href={social.url} 
-                        target="_blank" 
-                        rel="noreferrer"
-                        className="group/icon relative p-4 rounded-full bg-white/5 border border-white/10 hover:border-gemini-blue transition-all duration-300 ease-spring hover:shadow-[0_0_25px_rgba(76,139,255,0.4)] hover:scale-110 overflow-hidden"
-                        title={social.platform}
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-tr from-gemini-blue to-gemini-purple opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
-                        {social.icon === 'github' ? (
-                          <Github className="w-5 h-5 text-gray-400 group-hover/icon:text-white relative z-10 transition-colors" />
-                        ) : (
-                          <Linkedin className="w-5 h-5 text-gray-400 group-hover/icon:text-white relative z-10 transition-colors" />
-                        )}
-                    </a>
-                ))}
-            </div>
+          </div>
         </div>
 
-        <div className="flex-1 relative flex justify-center items-center">
-            {/* Spinning Rings - Enhanced */}
-            <div className="absolute w-[550px] h-[550px] border border-white/5 rounded-full animate-spin-slow opacity-40"></div>
-            <div className="absolute w-[450px] h-[450px] border border-dashed border-white/10 rounded-full animate-[spin_20s_linear_infinite_reverse] opacity-50"></div>
-            
-            <div className="relative w-80 h-80 md:w-96 md:h-96 group perspective-1000">
-                <div className="absolute inset-0 bg-gradient-to-tr from-gemini-blue to-gemini-purple rounded-full blur-3xl opacity-20 animate-pulse-slow group-hover:opacity-40 transition-opacity duration-700"></div>
-                <img 
-                    src={USER_INFO.heroImage} 
-                    alt={USER_INFO.name} 
-                    className="w-full h-full object-cover rounded-full border-2 border-white/10 relative z-10 grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl group-hover:shadow-gemini-blue/30"
-                />
-                
-                {/* Tech Cards */}
-                <div className="absolute -top-6 -right-6 glass-panel px-5 py-3 rounded-xl flex items-center gap-3 animate-float z-20 border-l-4 border-gemini-purple hover:scale-110 transition-transform duration-300">
-                    <Sparkles className="w-5 h-5 text-gemini-purple" />
-                    <div>
-                        <span className="block text-xs font-mono text-gray-400">Status</span>
-                        <span className="text-sm font-bold text-white">Creative Mode</span>
-                    </div>
-                </div>
-                <div className="absolute -bottom-6 -left-6 glass-panel px-5 py-3 rounded-xl flex items-center gap-3 animate-float z-20 border-l-4 border-gemini-blue hover:scale-110 transition-transform duration-300" style={{animationDelay: '1.5s'}}>
-                    <Brain className="w-5 h-5 text-gemini-blue" />
-                    <div>
-                        <span className="block text-xs font-mono text-gray-400">Focus</span>
-                        <span className="text-sm font-bold text-white">Problem Solving</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-      </header>
-
-      {/* Skills Marquee Section */}
-      <section id="skills" className="py-12 bg-black/40 border-y border-white/5 overflow-hidden backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
-             <span className="text-gemini-blue font-mono text-sm tracking-widest uppercase">My Arsenal</span>
-        </div>
-        <div className="relative flex overflow-x-hidden group mask-gradient-x">
-            <div className="py-4 animate-marquee whitespace-nowrap flex gap-8 items-center min-w-full">
-                {[...SKILLS, ...SKILLS, ...SKILLS].map((skill, index) => (
-                    <div key={`${skill.name}-${index}`} className="flex-shrink-0 flex items-center gap-2 px-6 py-3 bg-white/5 rounded-full border border-white/5 text-gray-300 hover:border-gemini-blue/50 hover:bg-gemini-blue/10 hover:text-white transition-all cursor-crosshair hover:shadow-[0_0_15px_rgba(76,139,255,0.2)]">
-                        <Cpu className="w-4 h-4 text-gemini-blue opacity-50" />
-                        <span className="font-semibold">{skill.name}</span>
-                    </div>
-                ))}
-            </div>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-30">
+          <div className="w-px h-12 bg-gradient-to-b from-transparent via-white to-transparent" />
         </div>
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-32 px-6 max-w-7xl mx-auto relative z-10">
-        <div className="mb-20 flex flex-col md:flex-row justify-between items-end gap-6">
-            <div>
-                <h2 className="text-4xl md:text-6xl font-black mb-4 tracking-tight">Featured <span className="gradient-text">Deployments</span></h2>
-                <p className="text-gray-400 max-w-xl text-lg">
-                    Real-world solutions engineered for performance, security, and user experience.
-                </p>
+      <section id="projects" className="relative py-32 px-6 z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div className="space-y-4">
+              <span className="text-gemini-blue font-mono text-sm tracking-widest uppercase flex items-center gap-2">
+                <div className="w-8 h-px bg-gemini-blue" /> Case Studies
+              </span>
+              <h2 className="text-5xl md:text-6xl font-black tracking-tighter">SELECTED WORKS</h2>
             </div>
-            <div className="hidden md:block w-32 h-1 bg-gradient-to-r from-gemini-blue to-transparent rounded-full"></div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-10">
-            {PROJECTS.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-            ))}
-        </div>
-      </section>
-
-      {/* About & Qualification Section */}
-      <section id="about" className="py-32 bg-gemini-surface/30 relative">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gemini-blue/20 to-transparent"></div>
-        
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
-            <div className="space-y-8">
-                <h2 className="text-4xl font-bold">The Developer <span className="text-gray-500">Behind The Code</span></h2>
-                
-                <div className="prose prose-invert prose-lg text-gray-400">
-                    <p>{USER_INFO.about}</p>
-                    <p>
-                        My philosophy is simple: <strong className="text-white">Complexity should be internal, simplicity should be external.</strong> 
-                        Whether I'm designing a database schema or animating a button, the end goal is always the same—a seamless, impactful user journey.
-                    </p>
-                </div>
-
-                {/* Surprise Bot */}
-                <div className="pt-8">
-                    <p className="text-xs font-mono text-gemini-purple mb-4 flex items-center gap-2">
-                        <Sparkles className="w-3 h-3" /> 
-                        CREATIVITY MODULE LOADED
-                    </p>
-                    <div className="glass-panel p-6 rounded-2xl inline-block max-w-xs hover:scale-105 transition-transform duration-300 cursor-pointer border-t-2 border-t-gemini-purple/20">
-                         <BotAnimation />
-                         <p className="text-center text-xs text-gray-500 mt-4">"I am the ghost in the machine."</p>
-                    </div>
-                </div>
-            </div>
-
-            <div className="relative group perspective-1000">
-                <div className="absolute -inset-4 bg-gradient-to-r from-gemini-blue to-gemini-purple rounded-xl blur opacity-20 group-hover:opacity-50 transition duration-700"></div>
-                <div className="relative glass-panel p-3 rounded-xl transform transition-transform duration-700 ease-spring group-hover:rotate-y-12 group-hover:rotate-x-6">
-                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white/10 to-transparent pointer-events-none rounded-xl"></div>
-                    <img 
-                        src={USER_INFO.qualificationImage} 
-                        alt="Qualification Certificate" 
-                        className="w-full rounded-lg shadow-2xl"
-                    />
-                    <div className="absolute bottom-4 right-4 bg-gemini-blue text-white text-xs font-bold px-3 py-1 rounded shadow-lg">
-                        VERIFIED
-                    </div>
-                </div>
-            </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-32 px-6 text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gemini-blue/5 pointer-events-none"></div>
-        
-        <div className="max-w-4xl mx-auto relative z-10">
-            <h2 className="text-5xl md:text-6xl font-bold mb-8">Let's Build The <span className="gradient-text">Impossible</span></h2>
-            <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
-                Have a vision? I have the stack. Let's combine them to create something extraordinary.
+            <p className="max-w-md text-gray-500 text-lg leading-relaxed font-medium">
+              A curated selection of architecture-heavy applications solving real-world complexity.
             </p>
-            
-            <div className="flex flex-col md:flex-row justify-center gap-6 mb-16">
-                <a href={`mailto:${USER_INFO.email}`} className="group relative px-8 py-5 bg-white text-black font-bold rounded-xl overflow-hidden hover:scale-105 transition-transform ease-spring">
-                     <span className="relative z-10 flex items-center gap-3">
-                        <Mail className="w-5 h-5" /> {USER_INFO.email}
-                     </span>
-                     <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-300 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                </a>
-                <a href={`tel:${USER_INFO.phone}`} className="flex items-center justify-center gap-3 px-8 py-5 glass-panel text-white font-bold rounded-xl hover:bg-white/10 hover:border-gemini-blue transition-all hover:scale-105 ease-spring">
-                    <Phone className="w-5 h-5" />
-                    {USER_INFO.phone}
-                </a>
-            </div>
+          </div>
 
-            <footer className="border-t border-white/5 pt-12 text-sm text-gray-500 font-mono">
-                <div className="flex justify-center items-center gap-2 mb-4">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span>Systems Operational</span>
-                </div>
-                <p>&copy; {new Date().getFullYear()} Thabang Frans Mojapelo. Built with React.</p>
-            </footer>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {PROJECTS.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* Skills / Arsenal Section */}
+      <section id="arsenal" className="relative py-32 px-6 bg-gemini-surface/30 border-y border-white/5">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <span className="text-gemini-purple font-mono text-sm tracking-widest uppercase">The Stack</span>
+              <h2 className="text-5xl font-black tracking-tighter">ENGINEERING ARSENAL</h2>
+              <p className="text-gray-400 text-lg leading-relaxed max-w-lg">
+                I don't just use tools; I master them. My stack is carefully selected for performance, maintainability, and creative flexibility.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {SKILLS.map((skill) => (
+                <div key={skill.name} className="glass-card p-4 rounded-2xl flex items-center justify-between group hover:border-gemini-purple/30">
+                  <div className="space-y-1">
+                    <span className="text-xs font-mono text-gray-500 uppercase tracking-tighter">{skill.category}</span>
+                    <p className="font-bold text-sm text-gray-200">{skill.name}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-12 h-1 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-gemini-purple transition-all duration-1000" style={{ width: `${skill.level}%` }} />
+                    </div>
+                    <span className="text-[10px] font-mono text-gray-500">{skill.level}%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute -inset-4 bg-gemini-purple/10 blur-[80px] rounded-full animate-pulse" />
+            <div className="glass-card rounded-[40px] p-8 aspect-square flex items-center justify-center border-white/10 relative z-10 overflow-hidden">
+              <BotAnimation />
+              {/* Floating Tech Badges */}
+              <div className="absolute top-10 left-10 p-3 glass-card rounded-2xl animate-float">
+                <Code2 className="w-6 h-6 text-gemini-blue" />
+              </div>
+              <div className="absolute bottom-20 right-10 p-3 glass-card rounded-2xl animate-float delay-500">
+                <Database className="w-6 h-6 text-gemini-purple" />
+              </div>
+              <div className="absolute top-1/2 left-1/4 p-3 glass-card rounded-2xl animate-float delay-1000">
+                <Cpu className="w-6 h-6 text-emerald-400" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Profile / About Section */}
+      <section id="profile" className="relative py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            
+            <div className="lg:col-span-5 relative group">
+              <div className="absolute -inset-4 bg-gemini-blue/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative aspect-[4/5] rounded-[40px] overflow-hidden border border-white/10 glass-card">
+                <img 
+                  src={USER_INFO.heroImage} 
+                  alt={USER_INFO.name} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-gemini-blue" />
+                    <span className="text-sm font-medium text-gray-300">Johannesburg, South Africa</span>
+                  </div>
+                  <h3 className="text-3xl font-bold">{USER_INFO.name}</h3>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7 space-y-12">
+              <div className="space-y-6">
+                <h2 className="text-5xl font-black tracking-tighter">A PROBLEM-FIRST <br /><span className="text-gemini-blue">DEVELOPER.</span></h2>
+                <div className="space-y-6 text-lg text-gray-400 leading-relaxed font-medium">
+                  <p>{USER_INFO.about}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="glass-card p-6 rounded-3xl border-white/5 flex gap-4">
+                  <div className="w-12 h-12 bg-gemini-blue/10 rounded-2xl flex items-center justify-center shrink-0">
+                    <Award className="w-6 h-6 text-gemini-blue" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold mb-1">Logic-Driven Design</h4>
+                    <p className="text-sm text-gray-500">Prioritizing technical stability and scalability in every line of code.</p>
+                  </div>
+                </div>
+                <div className="glass-card p-6 rounded-3xl border-white/5 flex gap-4">
+                  <div className="w-12 h-12 bg-gemini-purple/10 rounded-2xl flex items-center justify-center shrink-0">
+                    <Sparkles className="w-6 h-6 text-gemini-purple" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold mb-1">Human-Centric UX</h4>
+                    <p className="text-sm text-gray-500">Crafting interfaces that are as intuitive as they are powerful.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Education / Qualification Link */}
+              <div className="glass-card p-2 rounded-[32px] border-white/5">
+                <div className="relative h-48 rounded-[24px] overflow-hidden group/qual">
+                  <img 
+                    src={USER_INFO.qualificationImage} 
+                    alt="Qualifications" 
+                    className="w-full h-full object-cover grayscale opacity-50 transition-all duration-700 group-hover/qual:grayscale-0 group-hover/qual:opacity-100 group-hover/qual:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center transition-opacity group-hover/qual:opacity-0">
+                    <span className="text-sm font-mono tracking-widest uppercase">Verified Expertize</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer / Connect Section */}
+      <footer id="connect" className="relative pt-32 pb-16 px-6 z-10 border-t border-white/5 overflow-hidden">
+        <div className="absolute -bottom-64 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gemini-blue/10 blur-[150px] rounded-full pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto space-y-24">
+          <div className="text-center space-y-8">
+            <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-none">
+              READY TO <br /><span className="text-gemini-blue">ARCHITECT?</span>
+            </h2>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+              <a href={`mailto:${USER_INFO.email}`} className="text-2xl md:text-3xl font-bold hover:text-gemini-blue transition-colors flex items-center gap-4 group">
+                {USER_INFO.email}
+                <ArrowUpRight className="w-8 h-8 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform" />
+              </a>
+              <span className="hidden md:block w-px h-10 bg-white/10" />
+              <a href={`tel:${USER_INFO.phone}`} className="text-2xl md:text-3xl font-bold hover:text-gemini-purple transition-colors flex items-center gap-4 group">
+                {USER_INFO.phone}
+                <Phone className="w-8 h-8 group-hover:scale-110 transition-transform" />
+              </a>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center pt-16 border-t border-white/5 gap-8">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gemini-blue rounded-lg flex items-center justify-center">
+                <Terminal className="w-4 h-4 text-white" />
+              </div>
+              <p className="text-sm font-mono text-gray-500 uppercase tracking-widest">© 2025 THABANG FRANS MOJAPELO</p>
+            </div>
+
+            <div className="flex gap-8">
+              {SOCIALS.map(s => (
+                <a key={s.platform} href={s.url} target="_blank" className="text-sm font-mono text-gray-500 hover:text-white transition-colors uppercase tracking-widest">
+                  {s.platform}
+                </a>
+              ))}
+            </div>
+
+            <p className="text-xs font-mono text-gray-600 flex items-center gap-2">
+              DESIGNED WITH <Brain className="w-3 h-3" /> & <Code2 className="w-3 h-3" />
+            </p>
+          </div>
+        </div>
+      </footer>
+
+      {/* Floating Chat Bot */}
       <GeminiChat />
 
     </div>
   );
 };
+
+// Helper components not in separate files
+const ArrowUpRight = ({ className }: { className?: string }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
 
 export default App;
